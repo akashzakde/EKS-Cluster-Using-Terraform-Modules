@@ -1,4 +1,4 @@
-# Create Security Group for the EKS  
+# Create Security Group to access worker nodes 
 resource "aws_security_group" "eks_security_group" {
   name   = "EKS Security Group"
   vpc_id = var.vpc_id

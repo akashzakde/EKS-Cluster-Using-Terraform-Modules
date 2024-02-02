@@ -1,3 +1,4 @@
+# Calling VPC module for creating VPC on AWS
 module "vpc" {
   source = "./modules/vpc"
   project_name                 = var.project_name
@@ -9,7 +10,7 @@ module "vpc" {
   private_data_subnet_az1_cidr = var.private_data_subnet_az1_cidr
   private_data_subnet_az2_cidr = var.private_data_subnet_az2_cidr
 }
-
+# Calling Security group module for creating security group
 module "security-group" {
     source = "./modules/security-group"
     vpc_id = module.vpc.vpc_id
@@ -17,12 +18,13 @@ module "security-group" {
     env = var.env
     type = var.type
 }
-
+# Calling Key Pair module for using existing key pair for accessing EKS worker nodes
 module "keypair" {
     source = "./modules/keypair"
     key_name = var.key_name
 }
 
+# Calling EKS module for creating EKS cluster
 module "eks" {
   source = "./modules/eks"
   public_subnet_az1_id = "${module.vpc.public_subnet_az1_id}"
