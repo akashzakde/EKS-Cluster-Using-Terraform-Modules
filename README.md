@@ -19,5 +19,5 @@ This project will create VPC with 6 subnets , 1 Internet Gateway,2 Nat Gateway, 
 - Go inside "EKS-Cluster-Using-Terraform-Modules" folder & run "terraform init" command.
 - After terraform init command ,execute "terraform validate" , "terraform plan" and finally run "terraform apply"
 - Please wait for 5-6 mins to create VPC & EKS cluster.
-- Once all the resources are created , you can update kube config file using command : "aws eks update-kubeconfig --region <region-code> --name <Cluster-Name>"
+- Once all the resources are created , you can update kube config file using command : "aws eks update-kubeconfig --region Region-Code--name Cluster-Name"
 - Now you can run "kubectl get nodes" command to check connectivity with your new EKS cluster & host your application !
