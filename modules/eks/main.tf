@@ -77,6 +77,13 @@ resource "aws_iam_role_policy_attachment" "ec2-policy2" {
   role = aws_iam_role.ec2_role.name
 }
 
+resource "aws_iam_role_policy_attachment" "ec2-policy3" {
+  # Policy arn to you want to apply & this policy is aws policy for ec2 
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+  #The role these policy should be applied to ec2 machines
+  role = aws_iam_role.ec2_role.name
+}
+
 
 # Creating EKS Cluster
 resource "aws_eks_cluster" "eks" {
@@ -85,7 +92,7 @@ resource "aws_eks_cluster" "eks" {
   role_arn = aws_iam_role.eks_role.arn
 
   vpc_config {
-    endpoint_private_access = true
+    endpoint_private_access = false
     endpoint_public_access  = true
     subnet_ids = [
       var.public_subnet_az1_id,
@@ -125,9 +132,9 @@ resource "aws_eks_node_group" "eks-node-group" {
   #}
 
   scaling_config {
-    desired_size = 2
-    max_size     = 3
-    min_size     = 2
+    desired_size = 1
+    max_size     = 1
+    min_size     = 1
   }
 
   #Type of AMI associated with the EKS node group 
@@ -158,6 +165,7 @@ resource "aws_eks_node_group" "eks-node-group" {
   # Otherwise, EKS will not be able to properly delete EC2 Instances and Elastic Network Interfaces.
   depends_on = [
     aws_iam_role_policy_attachment.ec2-policy1,
-    aws_iam_role_policy_attachment.ec2-policy2
+    aws_iam_role_policy_attachment.ec2-policy2,
+    aws_iam_role_policy_attachment.ec2-policy3
   ]
 }
