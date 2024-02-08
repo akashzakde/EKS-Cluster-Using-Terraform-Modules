@@ -10,7 +10,7 @@ resource "aws_iam_role" "eks_role" {
       {
         Action = "sts:AssumeRole"
         Effect = "Allow"
-        Sid    = ""
+#        Sid    = ""
         Principal = {
           Service = "eks.amazonaws.com"
         }
@@ -50,7 +50,7 @@ resource "aws_iam_role" "ec2_role" {
       {
         Action = "sts:AssumeRole"
         Effect = "Allow"
-        Sid    = ""
+        #Sid    = ""
         Principal = {
           Service = "ec2.amazonaws.com"
         }
@@ -72,17 +72,11 @@ resource "aws_iam_role_policy_attachment" "ec2-policy1" {
 
 resource "aws_iam_role_policy_attachment" "ec2-policy2" {
   # Policy arn to you want to apply & this policy is aws policy for ec2 
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
-  #The role these policy should be applied to ec2 machines
-  role = aws_iam_role.ec2_role.name
-}
-
-resource "aws_iam_role_policy_attachment" "ec2-policy3" {
-  # Policy arn to you want to apply & this policy is aws policy for ec2 
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
   #The role these policy should be applied to ec2 machines
   role = aws_iam_role.ec2_role.name
 }
+
 
 # Creating EKS Cluster
 resource "aws_eks_cluster" "eks" {
@@ -99,6 +93,13 @@ resource "aws_eks_cluster" "eks" {
       var.private_app_subnet_az1_id,
       var.private_app_subnet_az2_id
     ]
+  }
+  
+  access_config {
+    # The cluster will source authenticated IAM principals from both EKS access entry APIs and the aws-auth ConﬁgMap.
+    authentication_mode                         = "API_AND_CONFIG_MAP"
+    # the IAM principal creating the cluster has Kubernetes cluster administrator access.
+    bootstrap_cluster_creator_admin_permissions = true
   }
 
   # Ensure that IAM Role permissions are created before and deleted after EKS Cluster handling.
@@ -118,10 +119,10 @@ resource "aws_eks_node_group" "eks-node-group" {
                     var.private_app_subnet_az1_id, 
                     var.private_app_subnet_az2_id
                     ]
-  remote_access {
-  ec2_ssh_key               = var.key_name
-  source_security_group_ids = var.source_security_group_ids
-  }
+  #remote_access {
+  #ec2_ssh_key               = var.key_name
+  #source_security_group_ids = var.source_security_group_ids
+  #}
 
   scaling_config {
     desired_size = 2
@@ -157,7 +158,6 @@ resource "aws_eks_node_group" "eks-node-group" {
   # Otherwise, EKS will not be able to properly delete EC2 Instances and Elastic Network Interfaces.
   depends_on = [
     aws_iam_role_policy_attachment.ec2-policy1,
-    aws_iam_role_policy_attachment.ec2-policy2,
-    aws_iam_role_policy_attachment.ec2-policy3,
+    aws_iam_role_policy_attachment.ec2-policy2
   ]
 }
