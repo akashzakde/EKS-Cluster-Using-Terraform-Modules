@@ -95,7 +95,9 @@ resource "aws_eks_cluster" "eks" {
     endpoint_public_access  = true
     subnet_ids = [
       var.public_subnet_az1_id,
-      var.public_subnet_az2_id
+      var.public_subnet_az2_id,
+      var.private_app_subnet_az1_id,
+      var.private_app_subnet_az2_id
     ]
   }
 
@@ -103,7 +105,7 @@ resource "aws_eks_cluster" "eks" {
   # Otherwise, EKS will not be able to properly delete EKS managed EC2 infrastructure such as Security Groups.
   depends_on = [
     aws_iam_role_policy_attachment.eks-policy1,
-    aws_iam_role_policy_attachment.eks-policy1
+    aws_iam_role_policy_attachment.eks-policy2
   ]
 }
 
@@ -133,7 +135,7 @@ resource "aws_eks_node_group" "eks-node-group" {
 
   #The capacity type of your managed node group.
   #Valid Values: ON_DEMAND | SPOT
-  capacity_type = "ON_DEMAND"
+  capacity_type = "SPOT"
 
   #Disk size in GiB for worker nodes
   disk_size = 50
@@ -142,7 +144,7 @@ resource "aws_eks_node_group" "eks-node-group" {
   force_update_version = false
 
   # EC2 Instance type for worker node
-  instance_types = ["t3.medium"]
+  instance_types = ["t2.micro"]
 
   labels = {
     role = "ec2_role"
@@ -156,6 +158,6 @@ resource "aws_eks_node_group" "eks-node-group" {
   depends_on = [
     aws_iam_role_policy_attachment.ec2-policy1,
     aws_iam_role_policy_attachment.ec2-policy2,
-    aws_iam_role_policy_attachment.ec2-policy1,
+    aws_iam_role_policy_attachment.ec2-policy3,
   ]
 }
