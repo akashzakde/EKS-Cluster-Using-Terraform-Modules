@@ -92,7 +92,7 @@ resource "aws_eks_cluster" "eks" {
   role_arn = aws_iam_role.eks_role.arn
 
   vpc_config {
-    endpoint_private_access = false
+    endpoint_private_access = true
     endpoint_public_access  = true
     subnet_ids = [
       var.public_subnet_az1_id,
@@ -132,9 +132,9 @@ resource "aws_eks_node_group" "eks-node-group" {
   #}
 
   scaling_config {
-    desired_size = 1
-    max_size     = 1
-    min_size     = 1
+    desired_size = var.desired_worker_size
+    max_size     = var.maximum_worker_size
+    min_size     = var.minimum_worker_size
   }
 
   #Type of AMI associated with the EKS node group 
@@ -146,7 +146,7 @@ resource "aws_eks_node_group" "eks-node-group" {
   capacity_type = "SPOT"
 
   #Disk size in GiB for worker nodes
-  disk_size = 50
+  disk_size = 20
 
   #Force version update if existing pods are unable to be drained due to a pod disruption budget issue.
   force_update_version = false

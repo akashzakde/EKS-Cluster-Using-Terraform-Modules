@@ -1,11 +1,7 @@
-# Region Name for creating AWS resource
+# aws region
 variable "region" {}
 # Project Name
 variable "project_name" {}
-# Environment to be used for EKS cluster
-variable "env" {}
-# Type of cluster 
-variable "type" {}
 # CIDR block for VPC 
 variable "vpc_cidr" {}
 # CIDR block for Public Subnet AZ 1 
@@ -16,9 +12,9 @@ variable "public_subnet_az2_cidr" {}
 variable "private_app_subnet_az1_cidr" {}
 # CIDR block for Private Application Subnet AZ 2
 variable "private_app_subnet_az2_cidr" {}
-# CIDR block for Private Database Subnet AZ 1
-variable "private_data_subnet_az1_cidr" {}
-# CIDR block for Private Database Subnet AZ 2
-variable "private_data_subnet_az2_cidr" {}
-# Key Pair Name To be Used For Accessing EKS worker nodes
-variable "key_name" {}
+# Desired EKS worker nodes size 
+variable "desired_worker_size" { type = number}
+# Maximum EKS worker nodes size
+variable "maximum_worker_size" { type = number}
+# Minimum EKS worker nodes size
+variable "minimum_worker_size" { type = number}

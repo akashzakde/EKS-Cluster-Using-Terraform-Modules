@@ -95,30 +95,6 @@ resource "aws_subnet" "private_app_subnet_az2" {
   }
 }
 
-# Create private data subnet az1
-resource "aws_subnet" "private_data_subnet_az1" {
-  vpc_id                   = aws_vpc.vpc.id
-  cidr_block               = var.private_data_subnet_az1_cidr
-  availability_zone        = data.aws_availability_zones.available_zones.names[0]
-  map_public_ip_on_launch  = false
-
-  tags      = {
-    Name    = "private data subnet az1"
-  }
-}
-
-# Create private data subnet az2
-resource "aws_subnet" "private_data_subnet_az2" {
-  vpc_id                   = aws_vpc.vpc.id
-  cidr_block               = var.private_data_subnet_az2_cidr
-  availability_zone        = data.aws_availability_zones.available_zones.names[1]
-  map_public_ip_on_launch  = false
-
-  tags      = {
-    Name    = "private data subnet az2"
-  }
-}
-
 # Create Elastic IP for public subnet az1 NAT GW
 resource "aws_eip" "eip1" {
   domain   = "vpc"
@@ -167,11 +143,6 @@ resource "aws_route_table_association" "private_subnet_az1_route_table_associati
   route_table_id      = aws_route_table.private_route_table_az1.id
 }
 
-# Associate private data subnet az1 to "private route table az1"
-resource "aws_route_table_association" "private_subnet_az1_route_table_association2" {
-  subnet_id           = aws_subnet.private_data_subnet_az1.id
-  route_table_id      = aws_route_table.private_route_table_az1.id
-}
 
 # Create private route table for az2 private subnet and add route for internet via nat gw
 resource "aws_route_table" "private_route_table_az2" {
@@ -190,11 +161,5 @@ resource "aws_route_table" "private_route_table_az2" {
 # Associate private app subnet az2 to "private route table az2"
 resource "aws_route_table_association" "private_subnet_az2_route_table_association1" {
   subnet_id           = aws_subnet.private_app_subnet_az2.id
-  route_table_id      = aws_route_table.private_route_table_az2.id
-}
-
-# Associate private data subnet az2 to "private route table az2"
-resource "aws_route_table_association" "private_subnet_az2_route_table_association2" {
-  subnet_id           = aws_subnet.private_data_subnet_az2.id
   route_table_id      = aws_route_table.private_route_table_az2.id
 }

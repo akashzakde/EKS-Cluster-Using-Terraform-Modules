@@ -23,26 +23,15 @@ output "private_app_subnet_az2_id" {
   value = aws_subnet.private_app_subnet_az2.id
 }
 
-# Subnet Id Of Private Data Subnet AZ 1
-output "private_data_subnet_az1_id" {
-  value = aws_subnet.private_data_subnet_az1.id
-}
-
-# Subnet Id Of Private Data Subnet AZ 2
-output "private_data_subnet_az2_id" {
-  value = aws_subnet.private_data_subnet_az2.id
-}
-
 # Internet Gateway
 output "internet_gateway" {
   value = aws_internet_gateway.internet_gateway
 }
-
-
+# First NAT GW
 output "nat_gw1" {
   value = aws_nat_gateway.nat_gw1
 }
-
+# Second NAT GW
 output "nat_gw2" {
   value = aws_nat_gateway.nat_gw2
 }

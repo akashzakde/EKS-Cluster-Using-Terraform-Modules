@@ -6,7 +6,9 @@ variable "public_subnet_az2_id" {}
 variable "private_app_subnet_az1_id" {}
 # CIDR block for Private Application Subnet AZ 2
 variable "private_app_subnet_az2_id" {}
-# Security Group To be Used For accessing EKS Worker nodes
-variable "source_security_group_ids" {}
-# Key Pair Name To be Used For Accessing EKS worker nodes
-variable "key_name" {}
+# Desired EKS worker nodes size 
+variable "desired_worker_size" { type = number}
+# Maximum EKS worker nodes size
+variable "maximum_worker_size" { type = number}
+# Minimum EKS worker nodes size
+variable "minimum_worker_size" { type = number}

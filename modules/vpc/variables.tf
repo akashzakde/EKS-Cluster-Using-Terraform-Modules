@@ -10,7 +10,3 @@ variable "public_subnet_az2_cidr" {}
 variable "private_app_subnet_az1_cidr" {}
 # CIDR block for Private Application Subnet AZ 2
 variable "private_app_subnet_az2_cidr" {}
-# CIDR block for Private Database Subnet AZ 1
-variable "private_data_subnet_az1_cidr" {}
-# CIDR block for Private Database Subnet AZ 2
-variable "private_data_subnet_az2_cidr" {}
