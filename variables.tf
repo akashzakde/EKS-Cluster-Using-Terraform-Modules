@@ -1,3 +1,7 @@
+# Cluster name
+variable "cluster_name" {}
+# Node Group name
+variable "node_group_name" {}
 # aws region
 variable "region" {}
 # Project Name

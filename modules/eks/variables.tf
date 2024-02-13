@@ -1,3 +1,7 @@
+# Cluster name
+variable "cluster_name" { type = string }
+# Node Group Name
+variable "node_group_name" { type = string }
 # CIDR block for Public Subnet AZ 1 
 variable "public_subnet_az1_id" {}
 # CIDR block for Public Subnet AZ 2

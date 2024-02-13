@@ -11,6 +11,8 @@ module "vpc" {
 # Calling EKS module for creating EKS cluster
 module "eks" {
   source = "./modules/eks"
+  cluster_name = var.cluster_name
+  node_group_name = var.node_group_name
   public_subnet_az1_id = "${module.vpc.public_subnet_az1_id}"
   public_subnet_az2_id = "${module.vpc.public_subnet_az2_id}"
   private_app_subnet_az1_id = "${module.vpc.private_app_subnet_az1_id}"

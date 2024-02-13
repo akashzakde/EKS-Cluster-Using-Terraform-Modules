@@ -13,8 +13,10 @@ private_app_subnet_az1_cidr="10.0.2.0/24"
 # CIDR block for Private Application Subnet AZ 2
 private_app_subnet_az2_cidr="10.0.3.0/24"
 # Desired EKS worker nodes size 
-desired_worker_size=1
+desired_worker_size=2
 # Maximum EKS worker nodes size
-maximum_worker_size=1
+maximum_worker_size=4
 # Minimum EKS worker nodes size
 minimum_worker_size=1
+# cluster name
+cluster_name="EKS"

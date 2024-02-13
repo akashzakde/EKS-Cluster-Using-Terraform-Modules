@@ -87,7 +87,7 @@ resource "aws_iam_role_policy_attachment" "ec2-policy3" {
 
 # Creating EKS Cluster
 resource "aws_eks_cluster" "eks" {
-  name = "EKS"
+  name = var.cluster_name
   # attach role which was created earlier
   role_arn = aws_iam_role.eks_role.arn
 
