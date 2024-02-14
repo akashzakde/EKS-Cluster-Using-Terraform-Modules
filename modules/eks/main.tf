@@ -120,7 +120,7 @@ resource "aws_eks_cluster" "eks" {
 # Creating Worker Node Group
 resource "aws_eks_node_group" "eks-node-group" {
   cluster_name    = aws_eks_cluster.eks.name
-  node_group_name = "eks-node-group"
+  node_group_name = var.node_group_name
   node_role_arn   = aws_iam_role.ec2_role.arn
   subnet_ids      = [
                     var.private_app_subnet_az1_id, 

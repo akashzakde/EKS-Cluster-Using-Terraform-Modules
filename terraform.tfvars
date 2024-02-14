@@ -20,3 +20,5 @@ maximum_worker_size=4
 minimum_worker_size=1
 # cluster name
 cluster_name="EKS"
+# node group name
+node_group_name="eks-node-group"
