@@ -116,7 +116,56 @@ resource "aws_eks_cluster" "eks" {
     aws_iam_role_policy_attachment.eks-policy2
   ]
 }
-
+##############################################
+# Fetching OIDC of Cluster
+data "tls_certificate" "eks" {
+  url = aws_eks_cluster.eks.identity[0].oidc[0].issuer
+}
+# Create Identity provider using cluster OIDC
+resource "aws_iam_openid_connect_provider" "eks" {
+  client_id_list  = ["sts.amazonaws.com"]
+  thumbprint_list = [data.tls_certificate.eks.certificates[0].sha1_fingerprint]
+  url             = aws_eks_cluster.eks.identity[0].oidc[0].issuer
+}
+# Generate trust relationships with OIDC 
+data "aws_iam_policy_document" "autoscaler_assume_role_policy" {
+  statement {
+    actions = ["sts:AssumeRoleWithWebIdentity"]
+    effect  = "Allow"
+/*
+    condition {
+      test     = "StringEquals"
+      variable = "${replace(aws_iam_openid_connect_provider.eks.url, "https://", "")}:sub"
+      values   = ["system:serviceaccount:cluster-autoscaler:cluster-autoscaler"]
+    }
+*/
+    condition {
+                 test = "StringEquals"
+                 variable = "${replace(aws_iam_openid_connect_provider.eks.url, "https://", "")}:aud"
+                 values = ["sts.amazonaws.com"]
+              }
+    principals {
+      identifiers = [aws_iam_openid_connect_provider.eks.arn]
+      type        = "Federated"
+    }
+  }
+}
+# Create IAM role for Cluster Auto Scaler
+resource "aws_iam_role" "autoscaler_role" {
+  assume_role_policy = data.aws_iam_policy_document.autoscaler_assume_role_policy.json
+  name               = "ClusterAutoScalerRole"
+}
+# Create Custom IAM Policy for Cluster Auto Scaler with necessary permissions to EC2 & ASG
+resource "aws_iam_policy" "autoscaler_policy" {
+  policy = file("./modules/eks/custom-autoscaler-policy.json")
+  name   = "ClusterAutoScalerPolicy"
+}
+# Attach above custom policy to Cluster Auto Scaler Role 
+resource "aws_iam_role_policy_attachment" "aws_load_balancer_controller_attach" {
+  role       = aws_iam_role.autoscaler_role.name
+  policy_arn = aws_iam_policy.autoscaler_policy.arn
+}
+#########################################
 # Creating Worker Node Group
 resource "aws_eks_node_group" "eks-node-group" {
   cluster_name    = aws_eks_cluster.eks.name
@@ -152,7 +201,7 @@ resource "aws_eks_node_group" "eks-node-group" {
   force_update_version = false
 
   # EC2 Instance type for worker node
-  instance_types = ["t2.micro"]
+  instance_types = ["t3.medium"]
 
   labels = {
     role = "ec2_role"
