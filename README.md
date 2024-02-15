@@ -20,4 +20,7 @@ This project will create VPC with 6 subnets , 1 Internet Gateway,2 Nat Gateway, 
 - After terraform init command ,execute "terraform validate" , "terraform plan" and finally run "terraform apply"
 - Please wait for 5-6 mins to create VPC & EKS cluster.
 - Once all the resources are created , you can update kube config file using command : "aws eks update-kubeconfig --region Region-Code--name Cluster-Name"
-- Now you can run "kubectl get nodes" command to check connectivity with your new EKS cluster & host your application !
+- Now its time to create cluster autoscaler deployment using command : `kubectl apply -f autoscaler-manifests.yaml` **NOTE:Before executing this command please ensure you have added autoscaler role arn , cluster name as mentioned in the file itself via comments**
+- Once you apply the manifests , you can check deployment status using command : `kubectl get deploy -n kube-system`
+- Now its time to test cluster autoscaler , create nginx deployment with : `kubectl apply -f webserver-nginx.yaml` & watch pending pods will get start running on new worker nodes added by our cluster autoscaler .
+- also you can run "kubectl get nodes" command to check current list of nodes , you would be surprised that cluster autoscaler has added new worker nodes to adjust our pending pods .
