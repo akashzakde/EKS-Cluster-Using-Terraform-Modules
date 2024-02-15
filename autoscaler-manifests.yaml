@@ -147,7 +147,7 @@ spec:
         fsGroup: 65534
       serviceAccountName: cluster-autoscaler
       containers:
-        - image: k8s.gcr.io/autoscaling/cluster-autoscaler:v1.22.2
+        - image: k8s.gcr.io/autoscaling/cluster-autoscaler:v1.29.0 #---> always update autoscaler image with latest image tag
           name: cluster-autoscaler
           resources:
             limits:
