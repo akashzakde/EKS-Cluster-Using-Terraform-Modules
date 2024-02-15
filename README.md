@@ -1,4 +1,4 @@
-# This project is about creating EKS cluster with Terraform Modules
+# This project is about creating EKS cluster with Terraform Modules & cluster autoscaler .
 
 ## Description : 
 This project will create VPC with 6 subnets , 1 Internet Gateway,2 Nat Gateway, 1 Security Group, EKS cluster with 2 worker nodes .
